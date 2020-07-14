@@ -19,16 +19,16 @@ class PersonController extends Controller
         //Regras de validação
         $rules = [
             'cpf' => 'required|min:11|max:11|unique:people',
-            'name' => 'max:100'
+            'nome' => 'max:100'
         ];
 
         // Mensagens de retorno
         $messages = [
-            'cpf.required' => 'É obrigatório o preenchimento do CPF!',
+            'cpf.required' => 'O CPF deve ser informado!',
             'cpf.min' => 'O CPF deve ter 11 caracteres!',
             'cpf.max' => 'O CPF deve ter 11 caracteres!',
             'cpf.unique' => 'Este CPF já está cadastrado!',
-            'name.max' => 'O nome deve ter no máximo 100 caracteres',
+            'nome.max' => 'O nome deve ter no máximo 100 caracteres',
         ];
 
         // Validando os dados fornecidos
@@ -37,7 +37,7 @@ class PersonController extends Controller
         // Instanciando uma pessoa com os dados fornecidos
         $person = new Person([
             'cpf' => $request->cpf,
-            'name' => $request->name,
+            'name' => $request->nome,
         ]);
 
         try{
@@ -46,14 +46,16 @@ class PersonController extends Controller
         }catch(Exception $e){
             // Retorno caso houver erro
             return response()->json([
-                'retorno' => 'Houve um erro ao cadastrar esta pessoa!'
+                'message' => 'Houve um erro ao cadastrar esta pessoa!'
             ], 500);
         }
 
         // Retorno caso houver sucesso
         return response()->json([
-            'retorno' => 'Pessoa cadastrada com sucesso!',
-            'pessoa' => $person
+            'message' => 'Pessoa cadastrada com sucesso!',
+            'data' => [
+                'pessoa' => $person
+            ],
         ], 201);
     }
 }

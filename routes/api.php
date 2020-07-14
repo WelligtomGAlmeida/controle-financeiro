@@ -14,4 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('person', 'PersonController@store')->name('person.store');
+Route::post('pessoa', 'PersonController@store')->name('person.store');
+
+Route::group(['as' => 'conta.', 'prefix' => 'conta/'], function () {
+    Route::post('credito', ['as' => 'credito', 'uses' => 'AccountController@credito']);
+});
