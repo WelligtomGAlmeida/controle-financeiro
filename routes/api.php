@@ -18,4 +18,5 @@ Route::post('pessoa', 'PersonController@store')->name('person.store');
 
 Route::group(['as' => 'conta.', 'prefix' => 'conta/'], function () {
     Route::post('credito', ['as' => 'credito', 'uses' => 'AccountController@credito']);
+    Route::post('debito', ['as' => 'debito', 'uses' => 'AccountController@debito']);
 });
