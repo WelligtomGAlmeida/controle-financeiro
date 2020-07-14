@@ -39,11 +39,27 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function saldo($cpf)
+    public function balance($cpf)
     {
-        return response()->json([
-            'retorno' => 'Função não implementada!'
-        ]);
+        $this->setCpf($cpf);
+
+        $balance = $this->calcularSaldo();
+
+        if(isset($balance))
+            return response()->json([
+                'message' => 'The CPF was found!',
+                'data' => [
+                    'cpf' => $cpf,
+                    'balance' => $balance
+                ]
+            ], 200);
+        else
+            return response()->json([
+                'message' => 'The CPF was not found!',
+                'error' => [
+                    'cpf' => ["The CPF is not registered!"]
+                ]
+            ], 200);
     }
 
     /**
