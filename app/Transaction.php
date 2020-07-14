@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    protected $filable = [
+    protected $fillable = [
         'person_id',
         'transaction_type_id',
         'transaction_movement_id',
