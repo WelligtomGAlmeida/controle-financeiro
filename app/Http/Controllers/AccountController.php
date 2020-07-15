@@ -26,11 +26,49 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function extrato($cpf)
+    public function statement($cpf)
     {
-        return response()->json([
-            'retorno' => 'Função não implementada!'
-        ]);
+        // Buscando a pessoa utilizando o CPF fornecido
+        $person = Person::where('cpf', $cpf)->first();
+
+        if($person){
+            // Buscando as transações da pessoa especificada
+            $transactions = Transaction::where('person_id', $person->id)
+                                ->with([
+                                    'transactionType',
+                                    'transactionMovement'
+                                ])
+                                ->orderBy('created_at', 'asc')
+                                ->get();
+
+            // Montando um array apenas com os dados relevantes
+            $statement = $transactions->map(function ($item, $key) {
+                return [
+                    'movement_code' => $item->transactionMovement->id,
+                    'movement_description' => $item->transactionMovement->name,
+                    'type_code' => $item->transactionType->id,
+                    'type_description' => $item->transactionType->name,
+                    'value' => $item->value,
+                    'date' => $item->created_at
+                ];
+            });
+
+            // Retorno
+            return response()->json([
+                'message' => 'The CPF was found!',
+                'data' => [
+                    'cpf' => $cpf,
+                    'statement' => $statement
+                ]
+            ], 200);
+        }else
+            // Retorno caso haja erro
+            return response()->json([
+                'message' => 'The CPF was not found!',
+                'error' => [
+                    'cpf' => ["The CPF is not registered!"]
+                ]
+            ], 200);
     }
 
     /**

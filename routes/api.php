@@ -21,4 +21,5 @@ Route::group(['as' => 'account.', 'prefix' => 'account/'], function () {
     Route::post('debito', ['as' => 'debito', 'uses' => 'AccountController@debito']);
     Route::post('transfer', ['as' => 'transfer', 'uses' => 'AccountController@transfer']);
     Route::get('balance/{cpf}', ['as' => 'balance', 'uses' => 'AccountController@balance']);
+    Route::get('statement/{cpf}', ['as' => 'statement', 'uses' => 'AccountController@statement']);
 });
