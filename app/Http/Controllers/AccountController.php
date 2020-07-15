@@ -21,9 +21,9 @@ class AccountController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Função que retorna todas as operações realizadas pelo CPF que deve ser informado
      *
-     * @param  int  $id
+     * @param  String  $cpf
      * @return \Illuminate\Http\Response
      */
     public function statement($cpf)
@@ -62,7 +62,7 @@ class AccountController extends Controller
                     'statement' => $statement
                 ]
             ], 200);
-        }else
+        }else{
             // Retorno caso haja erro
             return response()->json([
                 'status' => 2,
@@ -71,21 +71,26 @@ class AccountController extends Controller
                     'cpf' => ["The CPF is not registered!"]
                 ]
             ], 200);
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Função que retorna o saldo do CPF que deve ser informado
      *
-     * @param  int  $id
+     * @param  String  $cpf
      * @return \Illuminate\Http\Response
      */
     public function balance($cpf)
     {
+        // Atribuindo valor ao atributo CPF
         $this->setCpf($cpf);
 
-        $balance = $this->calcularSaldo();
+        // Obtendo o Saldo do CPF em questão
+        $balance = $this->calculateBalance();
 
-        if(isset($balance))
+        // Verificando se o CPF em questão foi encontrado
+        if(isset($balance)){
+            // Retorno caso o CPF for encontrado
             return response()->json([
                 'status' => 1,
                 'message' => 'The CPF was found!',
@@ -94,7 +99,8 @@ class AccountController extends Controller
                     'balance' => $balance
                 ]
             ], 200);
-        else
+        }else{
+            // Retorno caso o CPF não for encontrado
             return response()->json([
                 'status' => 2,
                 'message' => 'The CPF was not found!',
@@ -102,6 +108,7 @@ class AccountController extends Controller
                     'cpf' => ["The CPF is not registered!"]
                 ]
             ], 200);
+        }
     }
 
     /**
@@ -110,24 +117,24 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function credito(Request $request)
+    public function credit(Request $request)
     {
 
         //Regras de validação
         $rules = [
             'cpf' => 'required|min:11|max:11|exists:people,cpf',
-            'valor' => 'required|numeric|between:0,9999999999.99'
+            'value' => 'required|numeric|between:0,9999999999.99'
         ];
 
         // Mensagens de validação
         $messages = [
-            'cpf.required' => 'O CPF deve ser informado!',
-            'cpf.min' => 'O CPF deve ter 11 caracteres!',
-            'cpf.max' => 'O CPF deve ter 11 caracteres!',
-            'cpf.exists' => 'Este CPF não está cadastrado!',
-            'valor.required' => 'O valor deve ser informado!',
-            'valor.numeric' => 'O valor deve ser do tipo decimal!',
-            'valor.between' => 'O valor deve ser maior que 0 e menor que 9999999999.99!',
+            'cpf.required' => 'The CPF is required!',
+            'cpf.min' => 'The CPF must be 11 characters long!',
+            'cpf.max' => 'The CPF must be 11 characters long!',
+            'cpf.exists' => 'The CPF is not registered!',
+            'value.required' => 'The value is required!',
+            'value.numeric' => 'The value must be of numeric type!',
+            'value.between' => 'The value must be between 0 and 9999999999.99!',
         ];
 
         // Validando os dados fornecidos
@@ -141,7 +148,7 @@ class AccountController extends Controller
             'person_id' => $person->id,
             'transaction_type_id' => 1,
             'transaction_movement_id' => 1,
-            'value' => $request->valor
+            'value' => $request->value
         ]);
 
         try{
@@ -151,7 +158,7 @@ class AccountController extends Controller
             // Retorno caso houver erro
             return response()->json([
                 'status' => 2,
-                'message' => 'Houve um erro ao aplicar o crédito!',
+                'message' => 'An error occurred while crediting the value!',
                 'errors' => [$e]
             ], 500);
         }
@@ -159,45 +166,45 @@ class AccountController extends Controller
         // Retorno caso houver sucesso
         return response()->json([
             'status' => 1,
-            'message' => 'Crédito aplicado com sucesso!',
+            'message' => 'Successfully credited!',
             'data' => [
                 'cpf' => $person->cpf,
-                'valor' => $transaction->value
+                'value' => $transaction->value
             ],
         ], 201);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Registrando um débito
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function debito(Request $request)
+    public function debit(Request $request)
     {
         $this->setCpf($request->cpf);
 
         //Regras de validação
         $rules = [
             'cpf' => ['required', 'min:11', 'max:11', 'exists:people,cpf'],
-            'valor' => ['required', 'numeric', 'between:0,9999999999.99', function($attribute, $value, $fail){
-                $saldo = $this->calcularSaldo();
+            'value' => ['required', 'numeric', 'between:0,9999999999.99', function($attribute, $value, $fail){
+                $balance = $this->calculateBalance();
 
-                if(isset($saldo) && $saldo < floatval($value)){
-                    return $fail("Saldo insuficiente! O valor do débito é maior que o saldo atual.");
+                if(isset($balance) && $balance < floatval($value)){
+                    return $fail("Insufficient Funds!");
                 }
             }]
         ];
 
         // Mensagens de validação
         $messages = [
-            'cpf.required' => 'O CPF deve ser informado!',
-            'cpf.min' => 'O CPF deve ter 11 caracteres!',
-            'cpf.max' => 'O CPF deve ter 11 caracteres!',
-            'cpf.exists' => 'Este CPF não está cadastrado!',
-            'valor.required' => 'O valor deve ser informado!',
-            'valor.numeric' => 'O valor deve ser do tipo decimal!',
-            'valor.between' => 'O valor deve ser maior que 0 e menor que 9999999999.99!',
+            'cpf.required' => 'The CPF is required!',
+            'cpf.min' => 'The CPF must be 11 characters long!',
+            'cpf.max' => 'The CPF must be 11 characters long!',
+            'cpf.exists' => 'The CPF is not registered!',
+            'value.required' => 'The value is required!',
+            'value.numeric' => 'The value must be of numeric type!',
+            'value.between' => 'The value must be between 0 and 9999999999.99!',
         ];
 
         // Validando os dados fornecidos
@@ -211,7 +218,7 @@ class AccountController extends Controller
             'person_id' => $person->id,
             'transaction_type_id' => 2,
             'transaction_movement_id' => 2,
-            'value' => $request->valor
+            'value' => $request->value
         ]);
 
         try{
@@ -221,7 +228,7 @@ class AccountController extends Controller
             // Retorno caso houver erro
             return response()->json([
                 'status' => 2,
-                'message' => 'Houve um erro ao aplicar o débito!',
+                'message' => 'An error occurred while debiting the value!',
                 'errors' => [$e]
             ], 500);
         }
@@ -229,16 +236,16 @@ class AccountController extends Controller
         // Retorno caso houver sucesso
         return response()->json([
             'status' => 1,
-            'message' => 'Débito aplicado com sucesso!',
+            'message' => 'Successfully debited!',
             'data' => [
                 'cpf' => $person->cpf,
-                'valor' => $transaction->value
+                'value' => $transaction->value
             ],
         ], 201);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Realizando uma transferência.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -252,9 +259,9 @@ class AccountController extends Controller
             'originatingCpf' => ['required', 'min:11', 'max:11', 'exists:people,cpf'],
             'destinationCpf' => ['required', 'min:11', 'max:11', 'exists:people,cpf'],
             'value' => ['required', 'numeric', 'between:0,9999999999.99', function($attribute, $value, $fail){
-                $saldo = $this->calcularSaldo();
+                $balance = $this->calculateBalance();
 
-                if(isset($saldo) && $saldo < floatval($value)){
+                if(isset($balance) && $balance < floatval($value)){
                     return $fail("Insufficient Funds!");
                 }
             }]
@@ -331,7 +338,7 @@ class AccountController extends Controller
     /**
      * Função que calcula o saldo de uma pessoa
      */
-    public function calcularSaldo(){
+    public function calculateBalance(){
         // Buscando a pessoa
         $person = Person::where('cpf', $this->cpf)->first();
 
@@ -343,16 +350,16 @@ class AccountController extends Controller
                         ->pluck('total','transaction_movement_id');
 
             // Trantando os valores de crédito e débito que vem do banco
-            $creditos = isset($transactions[1]) ? floatval($transactions[1]) : 0;
-            $debitos = isset($transactions[2]) ? floatval($transactions[2]) : 0;
+            $credits = isset($transactions[1]) ? floatval($transactions[1]) : 0;
+            $debits = isset($transactions[2]) ? floatval($transactions[2]) : 0;
 
             // Calculando o saldo
-            $saldo = $creditos - $debitos;
+            $balance = $credits - $debits;
 
         }else{
-            $saldo = null;
+            $balance = null;
         }
 
-        return $saldo;
+        return $balance;
     }
 }

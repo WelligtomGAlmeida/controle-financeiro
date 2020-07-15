@@ -19,16 +19,16 @@ class PersonController extends Controller
         //Regras de validação
         $rules = [
             'cpf' => 'required|min:11|max:11|unique:people',
-            'nome' => 'max:100'
+            'name' => 'max:100'
         ];
 
         // Mensagens de retorno
         $messages = [
-            'cpf.required' => 'O CPF deve ser informado!',
-            'cpf.min' => 'O CPF deve ter 11 caracteres!',
-            'cpf.max' => 'O CPF deve ter 11 caracteres!',
-            'cpf.unique' => 'Este CPF já está cadastrado!',
-            'nome.max' => 'O nome deve ter no máximo 100 caracteres',
+            'cpf.required' => 'The CPF is required!',
+            'cpf.min' => 'The CPF must be 11 characters long!',
+            'cpf.max' => 'The CPF must be 11 characters long!',
+            'cpf.unique' => 'The CPF is already registered!',
+            'name.max' => 'The name must be a maximum of 100 characters',
         ];
 
         // Validando os dados fornecidos
@@ -37,7 +37,7 @@ class PersonController extends Controller
         // Instanciando uma pessoa com os dados fornecidos
         $person = new Person([
             'cpf' => $request->cpf,
-            'name' => $request->nome,
+            'name' => $request->name,
         ]);
 
         try{
@@ -47,7 +47,7 @@ class PersonController extends Controller
             // Retorno caso houver erro
             return response()->json([
                 'status' => 2,
-                'message' => 'Houve um erro ao cadastrar esta pessoa!',
+                'message' => 'An error occurred while registering the person!',
                 'errors' => [$e]
             ], 500);
         }
@@ -55,7 +55,7 @@ class PersonController extends Controller
         // Retorno caso houver sucesso
         return response()->json([
             'status' => 1,
-            'message' => 'Pessoa cadastrada com sucesso!',
+            'message' => 'Person successfully registered!',
             'data' => [
                 'person' => $person
             ],

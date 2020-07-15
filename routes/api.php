@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('pessoa', 'PersonController@store')->name('person.store');
+Route::post('person', 'PersonController@store')->name('person.store');
 
 Route::group(['as' => 'account.', 'prefix' => 'account/'], function () {
-    Route::post('credito', ['as' => 'credito', 'uses' => 'AccountController@credito']);
-    Route::post('debito', ['as' => 'debito', 'uses' => 'AccountController@debito']);
+    Route::post('credit', ['as' => 'credit', 'uses' => 'AccountController@credit']);
+    Route::post('debit', ['as' => 'debit', 'uses' => 'AccountController@debit']);
     Route::post('transfer', ['as' => 'transfer', 'uses' => 'AccountController@transfer']);
     Route::get('balance/{cpf}', ['as' => 'balance', 'uses' => 'AccountController@balance']);
     Route::get('statement/{cpf}', ['as' => 'statement', 'uses' => 'AccountController@statement']);
