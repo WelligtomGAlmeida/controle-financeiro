@@ -46,15 +46,18 @@ class PersonController extends Controller
         }catch(Exception $e){
             // Retorno caso houver erro
             return response()->json([
-                'message' => 'Houve um erro ao cadastrar esta pessoa!'
+                'status' => 2,
+                'message' => 'Houve um erro ao cadastrar esta pessoa!',
+                'errors' => [$e]
             ], 500);
         }
 
         // Retorno caso houver sucesso
         return response()->json([
+            'status' => 1,
             'message' => 'Pessoa cadastrada com sucesso!',
             'data' => [
-                'pessoa' => $person
+                'person' => $person
             ],
         ], 201);
     }

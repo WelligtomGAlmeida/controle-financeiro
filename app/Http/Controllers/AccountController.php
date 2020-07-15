@@ -55,6 +55,7 @@ class AccountController extends Controller
 
             // Retorno
             return response()->json([
+                'status' => 1,
                 'message' => 'The CPF was found!',
                 'data' => [
                     'cpf' => $cpf,
@@ -64,8 +65,9 @@ class AccountController extends Controller
         }else
             // Retorno caso haja erro
             return response()->json([
+                'status' => 2,
                 'message' => 'The CPF was not found!',
-                'error' => [
+                'errors' => [
                     'cpf' => ["The CPF is not registered!"]
                 ]
             ], 200);
@@ -85,6 +87,7 @@ class AccountController extends Controller
 
         if(isset($balance))
             return response()->json([
+                'status' => 1,
                 'message' => 'The CPF was found!',
                 'data' => [
                     'cpf' => $cpf,
@@ -93,8 +96,9 @@ class AccountController extends Controller
             ], 200);
         else
             return response()->json([
+                'status' => 2,
                 'message' => 'The CPF was not found!',
-                'error' => [
+                'errors' => [
                     'cpf' => ["The CPF is not registered!"]
                 ]
             ], 200);
@@ -146,12 +150,15 @@ class AccountController extends Controller
         }catch(Exception $e){
             // Retorno caso houver erro
             return response()->json([
-                'message' => 'Houve um erro ao aplicar o crédito!'
+                'status' => 2,
+                'message' => 'Houve um erro ao aplicar o crédito!',
+                'errors' => [$e]
             ], 500);
         }
 
         // Retorno caso houver sucesso
         return response()->json([
+            'status' => 1,
             'message' => 'Crédito aplicado com sucesso!',
             'data' => [
                 'cpf' => $person->cpf,
@@ -213,12 +220,15 @@ class AccountController extends Controller
         }catch(Exception $e){
             // Retorno caso houver erro
             return response()->json([
-                'message' => 'Houve um erro ao aplicar o débito!'
+                'status' => 2,
+                'message' => 'Houve um erro ao aplicar o débito!',
+                'errors' => [$e]
             ], 500);
         }
 
         // Retorno caso houver sucesso
         return response()->json([
+            'status' => 1,
             'message' => 'Débito aplicado com sucesso!',
             'data' => [
                 'cpf' => $person->cpf,
@@ -300,12 +310,15 @@ class AccountController extends Controller
         }catch(Exception $e){
             // Retorno caso houver erro
             return response()->json([
-                'message' => 'An error occurred while transferring the value!'
+                'status' => 2,
+                'message' => 'An error occurred while transferring the value!',
+                'errors' => [$e]
             ], 500);
         }
 
         // Retorno caso houver sucesso
         return response()->json([
+            'status' => 1,
             'message' => 'Transfer successful!',
             'data' => [
                 'originatingCpf' => $originatingPerson->cpf,
