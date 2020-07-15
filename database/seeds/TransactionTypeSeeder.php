@@ -13,13 +13,13 @@ class TransactionTypeSeeder extends Seeder
     public function run()
     {
         DB::table('transaction_types')->insert([
-            'name' => 'Crédito',
+            'name' => 'Depósito',
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         ]);
 
         DB::table('transaction_types')->insert([
-            'name' => 'Débito',
+            'name' => 'Saque',
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         ]);
