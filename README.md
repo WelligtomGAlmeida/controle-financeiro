@@ -3,7 +3,7 @@
 
 #### Introdução
 
-O software “Controle Financeiro” foi desenvolvido com a linguagem de programação PHP, utilizando o framework Laravel 7 e  conceitos de API Rest.0. Este software consiste em uma API que possibilita o controle do saldo relacionado aos CPF cadastrados. Para tanto as seguintes funções estão disponíveis:
+O software “Controle Financeiro” foi desenvolvido com a linguagem de programação PHP, utilizando o framework Laravel 7 e  conceitos de API Rest. Este software consiste em uma API que possibilita o controle do saldo relacionado aos CPF cadastrados. Para tanto as seguintes funções estão disponíveis:
 
 - Cadastro de pessoa;
 - Saldo;
