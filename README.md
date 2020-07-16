@@ -1,79 +1,76 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# CONTROLE FINANCEIRO - API
+<br>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+#### Introdução
 
-## About Laravel
+O software “Controle Financeiro” foi desenvolvido com a linguagem de programação PHP, utilizando o framework Laravel 7 e  conceitos de API Rest.0. Este software consiste em uma API que possibilita o controle do saldo relacionado aos CPF cadastrados. Para tanto as seguintes funções estão disponíveis:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Cadastro de pessoa;
+- Saldo;
+- Extrato;
+- Crédito;
+- Débito;
+- Transferência.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#### Requisitos 
+Para que seja possível executar o software em uma máquina linux é necessário que os seguintes pacotes estejam instalados e configurados:
+- Apache
+- PHP^7
+- MySQL, MariaDB ou outro SGBD
+- Git
 
-## Learning Laravel
+#### Passos para a instalação 
+		
+1. Execute o comando a seguir no diretório "/data/www", para clonar o projeto
+```
+    git clone https://github.com/WelligtomGAlmeida/controle-financeiro.git
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. Execute os seguintes comandos na raiz do projeto para baixar as dependencias do projeto
+```
+    php composer.phar install
+```	
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. Execute os seguintes comandos no diretório "/data/www" para mudar o apontamento da pasta default para a pasta public da aplicação:
+```
+    mv default/ default_backup
+    ln -s controle-financeiro/public default
+```	
 
-## Laravel Sponsors
+4. Garanta que o usuário "apache" tenha acesso a toda os diretórios e arquivos da aplicação
+	
+5. Crie a Base de dados no seu SGBD
+```
+    create database controle_financeiro
+```	
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+6. Configure o Banco de dados na aplicação. Para tal tarefa, abra em um editor de texto o arquivo ".env" que se encontra na raiz da aplicação. Neste arquivo você encontrará as seguintes linhas:
+```
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=laravel
+    DB_USERNAME=root
+    DB_PASSWORD=
+```
+- Em DB_CONNECTION informe o SGBD que será utilizado (mysql, sqlite, sqlsrv ou pgsql)
+- Em DB_HOST informe o IP do servidor de banco de dados, ou utilize 127.0.0.1 caso o banco esteja no mesmo servidor da aplicação.
+- Em DB_PORT informe a porta de acesso ao banco de dados do servidor de banco de dados.
+- Em DB_DATABASE informe o nome da Base de Dados criada anteriormente.
+- Em DB_USERNAME informe o nome do usuário do Banco de Dados.
+- Em DB_PASSWORD informe a senha de acesso do usuário do Banco de Dados.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
+4. Abra a linha de comando no diretório raiz da aplicação e execute o seguinte comando:
+```
+    php artisan migrate
+```
+	
+5. Abra a linha de comando no diretório raiz da aplicação e execute o seguinte comando:
+```
+    php artisan db:seed
+```
 
-## Contributing
+#### Banco de dados
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+![Entidade Relacionamento](public/img/ER.png)
